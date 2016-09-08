@@ -21,4 +21,5 @@ class MemoryDataLayer(DataLayer):
         return self._dict.__getitem__(key)
 
     def put(self, key, value):
-        return self._dict.__setitem__(key, value)
+        self._dict.__setitem__(key, value)
+        return key

@@ -28,7 +28,6 @@ class InnerNode(Node):
         return self._children[idx]
 
     def __getitem__(self, key):
-        print(self.child_to_follow(key))
         return self.child_to_follow(key)[key]
 
     def __str__(self):

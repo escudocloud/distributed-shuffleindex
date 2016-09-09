@@ -74,10 +74,7 @@ class Tree(object):
     def search(self, key):
         node = self._nodes.get(self._root)
         while not isinstance(node, Leaf):
-            print node
-            print node.child_to_follow(key)
             node = self._nodes.get(node.child_to_follow(key))
-        print node
         return node[key]
 
     def bulk_load(self, data):
@@ -93,4 +90,3 @@ class Tree(object):
 
     def __str__(self):
         return self._nodes.__str__()
-

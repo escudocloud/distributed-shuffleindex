@@ -15,3 +15,25 @@ class StatsLayer(DataLayer):
     def put(self, key, value):
         self.putcount[key] += 1
         return self._datalayer.put(key, value)
+
+    def reset(self):
+        self.getcount.clear()
+        self.putcount.clear()
+
+    def plot_get(self):
+        self._plot_counter(self.getcount, 'GET')
+
+    def plot_put(self):
+        self._plot_counter(self.putcount, 'PUT')
+
+    def _plot_counter(self, dictionary, title):
+        import matplotlib.pyplot as plt       # import here for loose dependency
+        data = sorted(dictionary.items())   # extract the data sorted by node ID
+        xs, ys = zip(*data) if data else ([], [])      # zip to create xs and ys
+        plt.xlim(0, max(xs) + 1)                     # set plot limits on x axis
+        xs = [x - 0.4 for x in xs]                # put bars centered with ticks
+        plt.xlabel('node ID')                        # set other plot attributes
+        plt.ylabel('count')
+        plt.title(title)
+        plt.bar(xs, ys)                                     # plot the bar chart
+        plt.show()

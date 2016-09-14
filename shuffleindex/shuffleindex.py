@@ -1,6 +1,7 @@
 from operator import itemgetter
 from bisect import bisect_right
 from utils import chunks
+from time import time
 from six import iterkeys
 
 class Node(object):
@@ -8,11 +9,15 @@ class Node(object):
     __last_ID = 0
 
     def __init__(self):
-        self.ID = Node.__last_ID = Node.__last_ID + 1
+        self.ID = self.PID = Node.__last_ID = Node.__last_ID + 1
+        self.update_timestamp()
 
     @property
     def is_leaf(self):
         return isinstance(self, Leaf)
+
+    def update_timestamp(self):
+        self.ts = time()
 
 
 class InnerNode(Node):

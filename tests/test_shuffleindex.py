@@ -1,5 +1,5 @@
+from shuffleindex.datalayer.memorylayer import *
 from shuffleindex.datalayer.statslayer import *
-from shuffleindex.datalayer.datalayer import *
 from shuffleindex.shuffleindex import *
 import pytest
 

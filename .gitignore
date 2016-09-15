@@ -91,3 +91,6 @@ ENV/
 
 # python pickle files
 *.pkl
+
+# OS X directory
+.DS_Store

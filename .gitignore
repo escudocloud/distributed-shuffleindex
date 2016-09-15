@@ -94,3 +94,6 @@ ENV/
 
 # OS X directory
 .DS_Store
+
+# Config files
+tests/config_*.py

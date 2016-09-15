@@ -19,6 +19,10 @@ class Node(object):
     def update_timestamp(self):
         self.ts = time()
 
+    @classmethod
+    def set_last_id(cls, last_ID=0):
+        cls.__last_ID = last_ID
+
 
 class InnerNode(Node):
 

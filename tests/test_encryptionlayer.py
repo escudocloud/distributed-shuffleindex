@@ -6,10 +6,9 @@ class TestEncryptionLayer:
 
     def setup_method(self, test_method):
         key = '0123456789ABCDEF'
-        iv  = 'FEDCBA9876543210'
         self.memorylayer = MemoryDataLayer()
         self.predicatelayer = PredicateLayer(self.memorylayer)
-        self.datalayer = EncryptionLayer(self.predicatelayer, key, iv)
+        self.datalayer = EncryptionLayer(self.predicatelayer, key)
 
     def test_encryption(self):
         key, value = 1, 'Hello, World!'

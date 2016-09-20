@@ -1,5 +1,5 @@
 from six.moves import cPickle as pickle
-from datalayer import DataLayer
+from ..datalayer import DataLayer
 
 class MemoryDataLayer(DataLayer):
 

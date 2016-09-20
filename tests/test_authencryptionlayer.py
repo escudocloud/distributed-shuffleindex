@@ -1,6 +1,5 @@
-from shuffleindex.datalayer.authencryptionlayer import *
-from shuffleindex.datalayer.predicatelayer import *
-from shuffleindex.datalayer.memorylayer import *
+from shuffleindex.layers import AuthEncryptionLayer, PredicateLayer
+from shuffleindex.layers.data import MemoryDataLayer
 import pytest
 
 class TestAuthEncryptionLayer:

@@ -1,6 +1,6 @@
-from datalayer import DataLayer
+from ..datalayer import DataLayer
 
-class S3DataLayer(DataLayer):
+class GCSDataLayer(DataLayer):
 
     def __init__(self):
         raise NotImplementedError

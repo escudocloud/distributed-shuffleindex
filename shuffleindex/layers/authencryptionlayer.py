@@ -1,4 +1,3 @@
-from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
 from datalayer import DataLayer
 

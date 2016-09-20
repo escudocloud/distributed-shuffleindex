@@ -1,6 +1,6 @@
-from shuffleindex.datalayer.encryptionlayer import *
-from shuffleindex.datalayer.predicatelayer import *
-from shuffleindex.datalayer.memorylayer import *
+from shuffleindex.layers.data.memorylayer import *
+from shuffleindex.layers.encryptionlayer import *
+from shuffleindex.layers.predicatelayer import *
 
 class TestEncryptionLayer:
 

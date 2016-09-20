@@ -1,5 +1,5 @@
-from datalayer import DataLayer
 from swiftclient import client
+from ..datalayer import DataLayer
 
 
 class SwiftDataLayer(DataLayer):

@@ -1,7 +1,7 @@
-import pytest
-from shuffleindex.datalayer.swift import SwiftDataLayer
-from config_swift import *
+from shuffleindex.layers.data.swift import SwiftDataLayer
 from swiftclient.exceptions import ClientException
+from config_swift import *
+import pytest
 
 data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'd')]
 

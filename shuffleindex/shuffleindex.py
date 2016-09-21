@@ -70,32 +70,17 @@ class Tree(object):
 
     def __init__(self, datalayer, fanout, leafsize):
         self._root = None
-        self._nodes = datalayer
+        self._datalayer = datalayer
         self._fanout = fanout
         self._leafsize = leafsize
-
-    def __getitem__(self, ID):
-        return self._nodes.get(ID)
-
-    def __setitem__(self, ID, node):
-        return self._nodes.put(ID, node)
-
-    def search(self, key):
-        node = self._nodes.get(self._root)
-        while not isinstance(node, Leaf):
-            node = self._nodes.get(node.child_to_follow(key))
-        return node[key]
 
     def bulk_load(self, data):
         data = sorted(data.items(), key=itemgetter(0)) # sort by key
         nodes = [Leaf(dict(chk)) for chk in chunks(data, self._leafsize)]
         while True:
-            ptrs = [self._nodes.put(node.ID, node) for node in nodes]
+            ptrs = [self._datalayer.put(node.ID, node) for node in nodes]
             if len(ptrs) <= 1: break
             vals = [node.leftmost for node in nodes]
             chks = zip(chunks(vals, self._fanout), chunks(ptrs, self._fanout))
             nodes = [InnerNode(v, p) for (v, p) in chks]
         self._root = ptrs[0]
-
-    def __str__(self):
-        return self._nodes.__str__()

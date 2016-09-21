@@ -19,6 +19,10 @@ class Node(object):
     def update_timestamp(self):
         self.ts = time()
 
+    def __eq__(self, other):
+        return (isinstance(other, Node) and
+                self.ID == other.ID and self.PID == other.PID)
+
     @classmethod
     def set_last_id(cls, last_ID=0):
         cls.__last_ID = last_ID
@@ -39,6 +43,12 @@ class InnerNode(Node):
         if idx < 0: raise KeyError(value)
         return self._pointers[idx]
 
+    def __eq__(self, other):
+        return (isinstance(other, InnerNode) and
+                super(InnerNode, self).__eq__(other) and
+                self._values == other._values and
+                self._pointers == other._pointers)
+
     def __str__(self):
         return 'InnerNode(%d, %s)' % (self.ID, self._pointers)
 
@@ -58,6 +68,11 @@ class Leaf(Node):
 
     def __getitem__(self, key):
         return self._data[key]
+
+    def __eq__(self, other):
+        return (isinstance(other, Leaf) and
+                super(Leaf, self).__eq__(other) and
+                self._data == other._data)
 
     def __str__(self):
         return 'Leaf(%d, %s)' % (self.ID, self._data)

@@ -1,4 +1,5 @@
 matplotlib
 pycryptodome
+pytest
 python-swiftclient
 six

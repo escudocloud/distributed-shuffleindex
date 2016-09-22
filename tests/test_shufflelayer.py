@@ -2,7 +2,7 @@ from shuffleindex.layers.data.memorylayer import *
 from shuffleindex.layers.shufflelayer import *
 from shuffleindex.layers.statslayer import *
 from shuffleindex.shuffleindex import *
-from testutils import gaussrange
+from utils.testutils import gaussrange
 from string import printable
 import pytest
 

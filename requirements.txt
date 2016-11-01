@@ -1,4 +1,6 @@
+google-cloud
 matplotlib
+oauth2client
 pycryptodome
 pytest
 python-swiftclient

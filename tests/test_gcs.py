@@ -28,7 +28,7 @@ class TestGCS:
         self._put()
         keys = [10, 15]
         for k in keys:
-            with pytest.raises(Exception):
+            with pytest.raises(AttributeError):
                 self.gcs.get(k)
 
     def teardown_method(self, test_method):

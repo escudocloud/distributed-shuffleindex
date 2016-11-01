@@ -18,7 +18,7 @@ class GCSDataLayer(DataLayer):
         blob = bucket.get_blob(key)
         return blob.download_as_string()
 
-    def put(self, bucketname, key, value):
+    def put(self, key, value):
         bucket = self.client.get_bucket(self.bucketname)
         blob = bucket.blob(key)
         blob.upload_from_string(value)

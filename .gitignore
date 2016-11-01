@@ -96,4 +96,6 @@ ENV/
 .DS_Store
 
 # Config files
-tests/config_*.py
+tests/configs/swift.py
+tests/configs/gcs.py
+tests/configs/*.json

@@ -1,6 +1,7 @@
 from authencryptionlayer import AuthEncryptionLayer
 from datalayer import DataLayer
 from encryptionlayer import EncryptionLayer
+from multishufflelayer import MultiShuffleLayer
 from predicatelayer import PredicateLayer
 from printlayer import PrintLayer
 from serializelayer import SerializeLayer

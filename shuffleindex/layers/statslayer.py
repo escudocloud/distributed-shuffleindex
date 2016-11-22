@@ -20,13 +20,13 @@ class StatsLayer(DataLayer):
         self.getcount.clear()
         self.putcount.clear()
 
-    def plot_get(self):
-        self._plot_counter(self.getcount, 'GET')
+    def plot_get(self, show=True):
+        self._plot_counter(self.getcount, 'GET', show)
 
-    def plot_put(self):
-        self._plot_counter(self.putcount, 'PUT')
+    def plot_put(self, show=True):
+        self._plot_counter(self.putcount, 'PUT', show)
 
-    def _plot_counter(self, dictionary, title):
+    def _plot_counter(self, dictionary, title, show):
         import matplotlib.pyplot as plt       # import here for loose dependency
         data = sorted(dictionary.items())   # extract the data sorted by node ID
         xs, ys = zip(*data) if data else ([], [])      # zip to create xs and ys
@@ -36,4 +36,4 @@ class StatsLayer(DataLayer):
         plt.ylabel('count')
         plt.title(title)
         plt.bar(xs, ys)                                     # plot the bar chart
-        plt.show()
+        if show: plt.show()

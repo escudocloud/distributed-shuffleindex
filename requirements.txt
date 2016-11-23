@@ -3,5 +3,6 @@ matplotlib
 oauth2client
 pycryptodome
 pytest
+python-keystoneclient
 python-swiftclient
 six

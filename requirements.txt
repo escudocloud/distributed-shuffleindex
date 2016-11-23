@@ -7,3 +7,4 @@ pytest
 python-keystoneclient
 python-swiftclient
 six
+tqdm

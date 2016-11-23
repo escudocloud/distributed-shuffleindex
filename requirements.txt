@@ -1,3 +1,4 @@
+colorama
 google-cloud
 matplotlib
 oauth2client

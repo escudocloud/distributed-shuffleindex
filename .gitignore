@@ -99,3 +99,6 @@ ENV/
 tests/configs/swift.py
 tests/configs/gcs.py
 tests/configs/*.json
+
+# configuration file
+config.ini

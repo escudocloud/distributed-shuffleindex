@@ -12,9 +12,9 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
-N        = 1000             # number of accesses to the datalayer in below tests
+N        = 10000            # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
-levels   = 1                                                  # number of levels
+levels   = 2                                                  # number of levels
 fanout   = S ** 3
 leafsize = S ** 3
 numdata  = S * leafsize * (fanout ** levels)
@@ -48,13 +48,18 @@ class TestShuffleLayer:
             self.datalayer.get(len(data))
 
     def test_with_shuffle_index(self):
+        for statslayer in self.statslayer:
+            statslayer.reset()
+
         for i in xrange(N):
             self.datalayer.get(0)                          # worst case scenario
 
         for row, statslayer in enumerate(self.statslayer):
             plt.subplot(len(self.statslayer), 2, 1 + 2 * row)
+            plt.yscale('log')
             statslayer.plot_get(show=False)
             plt.subplot(len(self.statslayer), 2, 2 + 2 * row)
+            plt.yscale('log')
             statslayer.plot_put(show=False)
 
         plt.tight_layout()

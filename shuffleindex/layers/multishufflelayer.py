@@ -110,8 +110,10 @@ class MultiShuffleLayer(DataLayer):
                         break                          # valid derangement found
 
                 else:
-                    logging.debug('no valid derangement for this to_read selection')
                     trials += 1
+                    if trials > 1000:
+                        raise RuntimeError('derangement stuck for low fanout')
+                    logging.debug('no valid derangement for this selection')
                     continue
 
                 break                                  # valid to_read selection

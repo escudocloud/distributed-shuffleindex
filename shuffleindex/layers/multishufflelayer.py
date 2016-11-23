@@ -6,6 +6,7 @@ from random import choice, sample, shuffle
 from bisect import bisect_right
 from copy import copy
 from six import itervalues
+import logging
 
 def _derangements(lst, fn=lambda x: x):
     shf = lst[:]           # make a copy of the list (shuffle operates in place)
@@ -37,7 +38,7 @@ class MultiShuffleLayer(DataLayer):
     def _update_node_ids(nodes, pi):
         previous = [nodes.pop(ID) for ID in list(pi.keys())]
         for node in previous:
-            print '%d -> %d' % (node.ID, pi[node.ID])
+            logging.debug('%d -> %d' % (node.ID, pi[node.ID]))
             node.ID = pi[node.ID]
             nodes[node.ID] = node
 
@@ -52,27 +53,27 @@ class MultiShuffleLayer(DataLayer):
 
         ids = self._root_ids
         parents = {ID: self._get(ID) for ID in ids}
-        print 'root nodes downloaded:', parents
+        logging.debug('root nodes downloaded: %s' % parents)
 
         # create a derangement of parents (on different nodes)
         pi = dict(zip(ids, next(_derangements(ids, self._node_dl))))
-        print 'root derangement:', pi
+        logging.debug('root derangement: %s' % pi)
 
         self._update_node_ids(parents, pi)
-        print 'root nodes after derangement:', parents
+        logging.debug('root nodes after derangement: %s' % parents)
 
         nodes = sorted(parents.values(), key=attrgetter('leftmost'))
         lefts = [node.leftmost for node in nodes]
         idx = bisect_right(lefts, target_value) - 1
         parent = nodes[idx]                # the root node that has target_value
-        print 'parent_id', parent.ID
+        logging.debug('parent_id: %s' % parent.ID)
 
         # search and shuffle
         for l in count(start=1):
 
             if parent.is_leaf: break
             target_id = parent.child_to_follow(target_value)  #target at level l
-            print 'target_id at level %d: %d' % (l, target_id)
+            logging.debug('target_id at level %d: %d' % (l, target_id))
 
             parent_nodes = parents.values()
             to_read, servers = [target_id], {self._node_dl(target_id)}
@@ -80,7 +81,7 @@ class MultiShuffleLayer(DataLayer):
             trials = 1
 
             while True:             # derangements may fail due to bad selection
-                print 'derangement trial #%d' % trials
+                logging.debug('derangement trial #%d' % trials)
 
                 while len(to_read) != self._num_servers:
                     child = choice(children)
@@ -90,12 +91,12 @@ class MultiShuffleLayer(DataLayer):
                         servers.add(server)
 
                 assert len(servers) == len(to_read) == self._num_servers
-                print 'to_read', to_read
+                logging.debug('to_read: %s' % to_read)
 
                 # test if valid derangement
                 for derangement in _derangements(to_read, self._node_dl):
                     pi = dict(zip(to_read, derangement))
-                    print 'derangement:', pi
+                    logging.debug('derangement: %s' % pi)
                     #pi = dict(zip(range(244,253,3), range(254,262,3)))
 
                     new_pointers = []
@@ -109,7 +110,7 @@ class MultiShuffleLayer(DataLayer):
                         break                          # valid derangement found
 
                 else:
-                    print 'no valid derangement for this to_read selection'
+                    logging.debug('no valid derangement for this to_read selection')
                     trials += 1
                     continue
 
@@ -117,11 +118,11 @@ class MultiShuffleLayer(DataLayer):
 
             read = {ID: self._get(ID) for ID in to_read}        # read the nodes
             self._update_node_ids(read, pi)        # swap nodes in read as in pi
-            print read
+            logging.debug(read)
 
             for parent, pointers in zip(parent_nodes, new_pointers):
                 parent._pointers = pointers         # update pointers in parents
-                print 'writing node', parent.ID
+                logging.debug('writing node: %s' % parent.ID)
                 self.put(parent.ID, parent)           # push parent to datalayer
 
             target_id = pi[target_id]                         # update target_id
@@ -131,7 +132,7 @@ class MultiShuffleLayer(DataLayer):
             parent = parents[target_id]
 
         for node in read.values():
-            print 'writing node', node.ID
+            logging.debug('writing node: %s' % node.ID)
             self.put(node.ID, node)                     # push node to datalayer
 
         node = parents[target_id]                        # get correct leaf node

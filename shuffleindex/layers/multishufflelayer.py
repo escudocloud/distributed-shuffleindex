@@ -97,7 +97,6 @@ class MultiShuffleLayer(DataLayer):
                 for derangement in _derangements(to_read, self._node_dl):
                     pi = dict(zip(to_read, derangement))
                     logging.debug('derangement: %s' % pi)
-                    #pi = dict(zip(range(244,253,3), range(254,262,3)))
 
                     new_pointers = []
                     for parent in parent_nodes:

@@ -1,4 +1,4 @@
-.PHONY: all clean test local remote
+.PHONY: all clean test local remote s3
 
 VENV := venv
 
@@ -16,5 +16,5 @@ $(VENV): requirements.txt
 	@ virtualenv $(VENV)
 	@ $(VENV)/bin/pip install -r requirements.txt
 
-local remote: $(VENV)
+local remote s3: $(VENV)
 	@ $(VENV)/bin/python bench.py $@

@@ -4,6 +4,7 @@ from shuffleindex.layers.data.memorylayer import *
 from shuffleindex.layers.serializelayer import *
 from shuffleindex.layers.statslayer import *
 from shuffleindex.layers.data.swift import *
+from shuffleindex.layers.data.s3 import *
 from shuffleindex.multishuffleindex import *
 from ConfigParser import ConfigParser
 from argparse import ArgumentParser
@@ -27,13 +28,8 @@ def local_datalayer():
     statslayer = StatsLayer(memorylayer)                       # stats datalayer
     return statslayer
 
-def remote_datalayer(authurl, username, key, tenant_name, container_name):
-    swiftlayer = SwiftDataLayer(authurl=authurl,
-                                username=username,
-                                key=key,
-                                tenant_name=tenant_name,
-                                container_name=container_name)
-    authencryptionlayer = AuthEncryptionLayer(swiftlayer, key=enc_key)
+def remote_datalayer(lowerlayer):
+    authencryptionlayer = AuthEncryptionLayer(lowerlayer, key=enc_key)
     serializelayer = SerializeLayer(authencryptionlayer)
     statslayer = StatsLayer(serializelayer)                    # stats datalayer
     return statslayer
@@ -41,7 +37,7 @@ def remote_datalayer(authurl, username, key, tenant_name, container_name):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Test the Shuffle Index')
-    parser.add_argument('TEST', choices=['local', 'remote'])
+    parser.add_argument('TEST', choices=['local', 'remote', 's3'])
     parser.add_argument('--accesses', type=int, default=N)
     parser.add_argument('--servers', type=int, default=S)
     parser.add_argument('--levels', type=int, default=levels)
@@ -61,15 +57,23 @@ if __name__ == '__main__':
 
     if args.TEST == 'local':
         statslayers = [local_datalayer() for _ in xrange(S)]
+    elif args.TEST == 'remote':
+        config = ConfigParser()
+        config.read(args.config)
+        statslayers = [remote_datalayer(
+            SwiftDataLayer(config.get('swift', 'authurl'),
+                           config.get('swift', 'username'),
+                           config.get('swift', 'key'),
+                           config.get('swift', 'tenant_name'),
+                           config.get('swift', 'container_name')))
+                       for _ in xrange(S)]
     else:
         config = ConfigParser()
         config.read(args.config)
-        create_datalayer = remote_datalayer
-        statslayers = [remote_datalayer(config.get('swift', 'authurl'),
-                                        config.get('swift', 'username'),
-                                        config.get('swift', 'key'),
-                                        config.get('swift', 'tenant_name'),
-                                        config.get('swift', 'container_name'))
+        statslayers = [remote_datalayer(
+            S3DataLayer(config.get('s3', 'access_key'),
+                        config.get('s3', 'secret_key'),
+                        config.get('s3', 'bucket_name')))
                        for _ in xrange(S)]
 
     print 'putting contents ...'

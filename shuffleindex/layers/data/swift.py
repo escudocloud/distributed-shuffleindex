@@ -11,15 +11,17 @@ class SwiftDataLayer(DataLayer):
                                         key=key,
                                         tenant_name=tenant_name,
                                         auth_version=auth_version)
-        self._container = container_name
+        self._container_name = container_name
 
     def get(self, key):
-        return self._swift.get_object(container=self._container, obj=key)
+        header, obj = self._swift.get_object(self._container_name, key)
+        return obj
 
     def put(self, key, value):
-        self._swift.put_object(container=self._container, obj=key, contents=value)
+        self._swift.put_object(self._container_name, key, value)
+        return key
 
     def clean(self):
-        _, objs = self._swift.get_container(self._container)
-        for o in objs:
-            self._swift.delete_object(container=self._container, obj=o['name'])
+        header, objs = self._swift.get_container(self._container_name)
+        for obj in objs:
+            self._swift.delete_object(self._container_name, obj['name'])

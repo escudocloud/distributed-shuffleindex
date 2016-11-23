@@ -1,3 +1,4 @@
+boto
 colorama
 google-cloud
 matplotlib

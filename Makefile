@@ -1,4 +1,4 @@
-.PHONY: all clean test
+.PHONY: all clean test local remote
 
 VENV := venv
 
@@ -12,6 +12,9 @@ clean:
 	@ find . -type f -name "*.py[co]" -delete
 	@ find . -type d -name "__pycache__" -delete
 
-$(VENV):
+$(VENV): requirements.txt
 	@ virtualenv $(VENV)
 	@ $(VENV)/bin/pip install -r requirements.txt
+
+local remote: $(VENV)
+	@ $(VENV)/bin/python bench.py $@

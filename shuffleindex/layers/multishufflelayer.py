@@ -1,5 +1,6 @@
 from datalayer import DataLayer
 from collections import Counter, defaultdict
+from asynclayer import AsyncLayer
 from itertools import chain, count, permutations
 from operator import attrgetter, methodcaller
 from random import choice, sample, shuffle
@@ -20,7 +21,9 @@ class MultiShuffleLayer(DataLayer):
 
     def __init__(self, datalayers):
         self._num_servers = len(datalayers)
-        self._datalayers = datalayers
+        #from printlayer import PrintLayer
+        #self._datalayers = map(AsyncLayer, map(PrintLayer, datalayers))
+        self._datalayers = map(AsyncLayer, datalayers)
 
     def set_root_ids(self, root_ids):
         self._root_ids = root_ids
@@ -29,6 +32,9 @@ class MultiShuffleLayer(DataLayer):
         return self._datalayers[ID % self._num_servers]
 
     def put(self, key, value):
+        return self._put(key, value).result()
+
+    def _put(self, key, value):
         return self._node_dl(key).put(key, value)
 
     def _get(self, key):
@@ -52,7 +58,9 @@ class MultiShuffleLayer(DataLayer):
         assert len(self._datalayers) == len(self._root_ids)
 
         ids = self._root_ids
-        parents = {ID: self._get(ID) for ID in ids}
+        futures = list(map(self._get, ids))
+        values = [future.result() for future in futures]
+        parents = dict(zip(ids, values))
         logging.debug('root nodes downloaded: %s' % parents)
 
         # create a derangement of parents (on different nodes)
@@ -118,13 +126,21 @@ class MultiShuffleLayer(DataLayer):
                 break                                  # valid to_read selection
 
             read = {ID: self._get(ID) for ID in to_read}        # read the nodes
+
+            futures = list(map(self._get, to_read))
+            values = [future.result() for future in futures]
+            read = dict(zip(to_read, values))
+
             self._update_node_ids(read, pi)        # swap nodes in read as in pi
             logging.debug(read)
 
+            futures = []
             for parent, pointers in zip(parent_nodes, new_pointers):
                 parent._pointers = pointers         # update pointers in parents
                 logging.debug('writing node: %s' % parent.ID)
-                self.put(parent.ID, parent)           # push parent to datalayer
+                futures.append(self._put(parent.ID, parent))
+
+            [future.result() for future in futures]
 
             target_id = pi[target_id]                         # update target_id
             # it is not necessary to update to_read since they are recomputed
@@ -132,9 +148,12 @@ class MultiShuffleLayer(DataLayer):
             parents = read
             parent = parents[target_id]
 
+        futures = []
         for node in read.values():
             logging.debug('writing node: %s' % node.ID)
-            self.put(node.ID, node)                     # push node to datalayer
+            futures.append(self._put(node.ID, node))          # put to datalayer
+
+        [future.result() for future in futures]
 
         node = parents[target_id]                        # get correct leaf node
         assert node.is_leaf                              # check that it is leaf

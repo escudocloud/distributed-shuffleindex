@@ -9,6 +9,7 @@ import pytest
 # use TkAgg matplotlib backend which works also in virtual environments
 import matplotlib
 matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 
 N = 1000                    # number of accesses to the datalayer in below tests
 
@@ -33,5 +34,11 @@ class TestDirectSearchLayer:
     def test_without_shuffle_index(self):
         for i in xrange(N):
             self.datalayer.get(gaussrange(len(self.data)))
-        self.statslayer.plot_get()
-        self.statslayer.plot_put()
+
+        self.statslayer.plot_get(show=False)
+        plt.savefig('test_directsearchlayer_get.pdf')
+        plt.clf()
+
+        self.statslayer.plot_put(show=False)
+        plt.savefig('test_directsearchlayer_put.pdf')
+        plt.clf()

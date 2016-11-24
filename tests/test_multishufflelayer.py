@@ -12,7 +12,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
-N        = 10000            # number of accesses to the datalayer in below tests
+N        = 1000             # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
 levels   = 2                                                  # number of levels
 fanout   = S ** 3
@@ -63,4 +63,5 @@ class TestShuffleLayer:
             statslayer.plot_put(show=False)
 
         plt.tight_layout()
-        plt.show()
+        plt.savefig('test_multishufflelayer.pdf')
+        plt.clf()

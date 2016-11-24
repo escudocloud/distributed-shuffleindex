@@ -21,8 +21,6 @@ class MultiShuffleLayer(DataLayer):
 
     def __init__(self, datalayers):
         self._num_servers = len(datalayers)
-        #from printlayer import PrintLayer
-        #self._datalayers = map(AsyncLayer, map(PrintLayer, datalayers))
         self._datalayers = map(AsyncLayer, datalayers)
 
     def set_root_ids(self, root_ids):

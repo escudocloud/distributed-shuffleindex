@@ -50,7 +50,8 @@ class InnerNode(Node):
                 self._pointers == other._pointers)
 
     def __str__(self):
-        return 'InnerNode(%d [was %d], %s)' % (self.ID, self.PID, self._pointers)
+        return 'InnerNode(%d [was %d], %s)' % \
+                (self.ID, self.PID, self._pointers)
 
     def __repr__(self):
         return self.__str__()

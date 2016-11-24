@@ -4,6 +4,7 @@ from itertools import chain, count
 from operator import attrgetter
 from random import choice, sample, shuffle
 from six import itervalues
+import logging
 
 
 class ShuffleLayer(DataLayer):
@@ -43,7 +44,7 @@ class ShuffleLayer(DataLayer):
         def update_node_ids(nodes, pi):
             previous = [nodes.pop(ID) for ID in list(nodes.keys())]
             for node in previous:
-                print '%d -> %d' % (node.ID, pi[node.ID])
+                logging.debug('%d -> %d' % (node.ID, pi[node.ID]))
                 node.ID = pi[node.ID]
                 nodes[node.ID] = node
 
@@ -62,7 +63,7 @@ class ShuffleLayer(DataLayer):
             n = self._cache[l-1][target_id]       # get previous node on path
             if n.is_leaf: break                   # if leaf it is the target
             target_id = n.child_to_follow(target_value) # otherwise get child
-            print 'target_id', target_id
+            logging.debug('target_id: %s' % target_id)
 
             # identify the blocks to read from the server
             if target_id not in self._cache[l]:   # target_id node not cached
@@ -72,7 +73,7 @@ class ShuffleLayer(DataLayer):
                     num_cover -= 1                # .. and drop one cover search
                     del cover_id[-1]              # .. and drop last cover_id
             else:
-                print 'target in cache'
+                logging.debug('target in cache')
                 to_read_ids = []     # we do not need to read target_id (cached)
 
             if l != 1:               # cover_id for level 1 are already computed
@@ -85,13 +86,13 @@ class ShuffleLayer(DataLayer):
             assert len(to_read_ids) == self._num_cover + 1
 
             # read blocks
-            print 'reading blocks', to_read_ids
+            logging.debug('reading blocks: %s' % to_read_ids)
             read = dict(zip(to_read_ids, map(self._datalayer.get, to_read_ids)))
 
             # shuffle nodes
             ids = list(to_read_ids) + list(self._cache[l].keys())      # get ids
             pi = dict(zip(ids, sample(ids, len(ids))))      # random permutation
-            print 'pi', pi
+            logging.debug('pi: %s' % pi)
 
             # update ids on read and cache[l]. They'll be put at next iteration
             update_node_ids(read, pi)               # update node ids in read ..
@@ -100,30 +101,30 @@ class ShuffleLayer(DataLayer):
             # determine effects on parents and store nodes at level l-1
             for node in chain(self._cache[l-1].values(), non_cached_p.values()):
                 # use change ID with pi[ID] or fallback again to ID if no pi[ID]
-                print 'node %d pointers %s ->' % (node.ID, node._pointers)
+                logging.debug('node %d pointers %s' % (node.ID, node._pointers))
                 node._pointers = [pi.get(ID, ID) for ID in node._pointers]
-                print '-> %s' % node._pointers
-                print 'writing node %d' % node.ID
+                logging.debug('-> %s' % node._pointers)
+                logging.debug('writing node %d' % node.ID)
                 self._datalayer.put(node.ID, node)                # writing node
 
-            print 'target_id %d -> %d' % (target_id, pi[target_id])
+            logging.debug('target_id %d -> %d' % (target_id, pi[target_id]))
             target_id = pi[target_id]                 # update also target_id ..
-            print 'cover_id %s ->' % cover_id
+            logging.debug('cover_id %s ->' % cover_id)
             cover_id = [pi.get(ID, ID) for ID in cover_id]    # .. and cover_ids
-            print '-> %s' % cover_id
+            logging.debug('-> %s' % cover_id)
 
             # update cache at level l
             non_cached = read
 
             if cache_hit:                    # if cache_hit update the timestamp
                 self._cache[l][target_id].update_timestamp()
-                print 'timestamp updated'
+                logging.debug('timestamp updated')
             else:                          # otherwise put target_id in cache[L]
                 deleted = min(itervalues(self._cache[l]), key=attrgetter('ts'))
-                print 'removing %d from cache[%d]' % (deleted.ID, l)
+                logging.debug('removing %d from cache[%d]' % (deleted.ID, l))
                 del self._cache[l][deleted.ID]        # remove LRU from cache[L]
                 n = read[target_id]                   # get last node on path ..
-                print 'add %d to cache[%d]' % (target_id, l)
+                logging.debug('add %d to cache[%d]' % (target_id, l))
                 self._cache[l][target_id] = n         # .. to add it to cache[L]
                 non_cached[deleted.ID] = deleted      # .. deleted in non_cached
                 del non_cached[target_id]             # and remove the target_id
@@ -131,12 +132,12 @@ class ShuffleLayer(DataLayer):
             non_cached_p = non_cached       # at last prepare for next iteration
 
         # write nodes at level h
-        print self._cache
+        logging.debug(self._cache)
         for node in chain(self._cache[l-1].values(), non_cached_p.values()):
-            print 'writing node %d' % node.ID
+            logging.debug('writing node %d' % node.ID)
             self._datalayer.put(node.ID, node)                    # writing node
 
         n = self._cache[l-1][target_id]
-        print n
+        logging.debug(n)
         assert n.is_leaf
         return n[target_value]

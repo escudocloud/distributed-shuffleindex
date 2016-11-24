@@ -1,0 +1,7 @@
+colorama
+futures
+matplotlib
+pycryptodome
+pytest
+six
+tqdm

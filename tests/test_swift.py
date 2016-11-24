@@ -1,11 +1,12 @@
-from shuffleindex.layers.data.swift import SwiftDataLayer
-from swiftclient.exceptions import ClientException
 import pytest
 
 try:
     from configs.swift import *
+    from shuffleindex.layers.data.swift import SwiftDataLayer
+    from swiftclient.exceptions import ClientException
 except ImportError:
     pytestmark = pytest.mark.skipif(True, reason='missing configuration file')
+
 
 
 data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'd')]

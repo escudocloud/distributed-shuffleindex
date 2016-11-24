@@ -1,5 +1,6 @@
 boto
 colorama
+futures
 google-cloud
 matplotlib
 oauth2client

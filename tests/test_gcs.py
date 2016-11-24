@@ -1,8 +1,8 @@
-from shuffleindex.layers.data.gcs import GCSDataLayer
 import pytest
 
 try:
     from configs.gcs import *
+    from shuffleindex.layers.data.gcs import GCSDataLayer
 except ImportError:
     pytestmark = pytest.mark.skipif(True, reason='missing configuration file')
 

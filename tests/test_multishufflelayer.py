@@ -8,7 +8,7 @@ import pytest
 
 # use TkAgg matplotlib backend which works also in virtual environments
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 

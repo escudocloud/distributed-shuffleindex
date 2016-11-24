@@ -27,17 +27,15 @@ class TestPredicateLayer:
         self.datalayer = AsyncLayer(self.memorylayer)
 
     def test_async_get(self):
-        self.datalayer.get_send(0)
+        future = self.datalayer.get(0)
         sleep(self.sleeptime)                             # wait work completion
         start = time()
-        value = self.datalayer.get_recv()
+        assert future.result() == 0
         assert (time() - start) < (self.sleeptime / 2.0)
-        assert value == 0
 
     def test_async_put(self):
-        self.datalayer.put_send(0, 0)
+        future = self.datalayer.put(0, 0)
         sleep(self.sleeptime)                             # wait work completion
         start = time()
-        result = self.datalayer.put_recv()
+        assert future.result() == 0
         assert (time() - start) < (self.sleeptime / 2.0)
-        assert result == 0

@@ -36,9 +36,9 @@ class TestDirectSearchLayer:
             self.datalayer.get(gaussrange(len(self.data)))
 
         self.statslayer.plot_get(show=False)
-        plt.savefig('test_directsearchlayer_get.pdf')
+        plt.savefig('tests/figure_directsearchlayer_get.pdf')
         plt.clf()
 
         self.statslayer.plot_put(show=False)
-        plt.savefig('test_directsearchlayer_put.pdf')
+        plt.savefig('tests/figure_directsearchlayer_put.pdf')
         plt.clf()

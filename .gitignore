@@ -103,4 +103,4 @@ tests/configs/*.json
 # configuration file
 config.ini
 
-test_*.pdf
+tests/figure_*.pdf

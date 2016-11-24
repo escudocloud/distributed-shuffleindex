@@ -37,9 +37,9 @@ class TestShuffleLayer:
             self.datalayer.get(gaussrange(len(self.data)))
 
         self.statslayer.plot_get(show=False)
-        plt.savefig('test_shufflelayer_get.pdf')
+        plt.savefig('tests/figure_shufflelayer_get.pdf')
         plt.clf()
 
         self.statslayer.plot_put(show=False)
-        plt.savefig('test_shufflelayer_put.pdf')
+        plt.savefig('tests/figure_shufflelayer_put.pdf')
         plt.clf()

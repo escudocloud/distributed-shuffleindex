@@ -63,5 +63,5 @@ class TestShuffleLayer:
             statslayer.plot_put(show=False)
 
         plt.tight_layout()
-        plt.savefig('test_multishufflelayer.pdf')
+        plt.savefig('tests/figure_multishufflelayer.pdf')
         plt.clf()

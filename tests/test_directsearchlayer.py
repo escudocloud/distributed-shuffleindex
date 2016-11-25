@@ -11,8 +11,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-N = 1000                    # number of accesses to the datalayer in below tests
-
 class TestDirectSearchLayer:
 
     def setup_method(self, test_method):
@@ -31,7 +29,7 @@ class TestDirectSearchLayer:
         with pytest.raises(KeyError):
             self.datalayer.get(len(printable))
 
-    def test_without_shuffle_index(self):
+    def test_without_shuffle_index(self, N):
         for i in xrange(N):
             self.datalayer.get(gaussrange(len(self.data)))
 

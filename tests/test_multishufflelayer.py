@@ -12,7 +12,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-N        = 10000            # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
 levels   = 2                                                  # number of levels
 fanout   = S ** 3
@@ -39,7 +38,7 @@ class TestShuffleLayer:
         self.tree.bulk_load(data)                 # bulk load data into the tree
         self.datalayer.set_root_ids(self.tree._roots)            # set the roots
 
-    def test_search_with_included_key(self):
+    def test_search_with_included_key(self, N):
         for key in xrange(min(N, len(data))):
             assert self.datalayer.get(key) == data[key]
 
@@ -47,12 +46,12 @@ class TestShuffleLayer:
         with pytest.raises(KeyError):
             self.datalayer.get(len(data))
 
-    def test_with_shuffle_index_gaussian(self):
+    def test_with_shuffle_index_gaussian(self, N):
         for statslayer in self.statslayers: statslayer.reset()
         for i in xrange(N): self.datalayer.get(gaussrange(numdata))
         self._plot_results('tests/figure_multishufflelayer_gaussian')
 
-    def test_with_shuffle_index_worst(self):
+    def test_with_shuffle_index_worst(self, N):
         for statslayer in self.statslayers: statslayer.reset()
         for i in xrange(N): self.datalayer.get(0)
         self._plot_results('tests/figure_multishufflelayer_worst')

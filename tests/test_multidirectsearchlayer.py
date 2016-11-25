@@ -12,7 +12,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-N        = 10000            # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
 levels   = 2                                                  # number of levels
 fanout   = S ** 3
@@ -46,16 +45,12 @@ class TestMultiDirectSearchLayer:
         with pytest.raises(KeyError):
             self.datalayer.get(numdata)
 
-    def test_without_shuffle_index(self):
-        for i in xrange(N):
-            self.datalayer.get(gaussrange(numdata))
-
-    def test_direct_gaussian(self):
+    def test_direct_gaussian(self, N):
         for i in xrange(N): self.datalayer.get(gaussrange(numdata))
         self._plot_results('tests/figure_multidirectsearch_gaussian')
 
-    def test_direct_worst(self):
-        for i in xrange(N): self.datalayer.get(numdata//2)
+    def test_direct_worst(self, N):
+        for i in xrange(N): self.datalayer.get(numdata // 2)
         self._plot_results('tests/figure_multidirectsearch_worst')
 
     def _plot_results(self, pathprefix):

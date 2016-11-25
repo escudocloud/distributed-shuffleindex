@@ -32,8 +32,9 @@ class StatsLayer(DataLayer):
         xs, ys = zip(*data) if data else ([], [])      # zip to create xs and ys
         plt.xlim(0, max(xs) + 1)                     # set plot limits on x axis
         xs = [x - 0.4 for x in xs]                # put bars centered with ticks
-        plt.xlabel('node ID')                        # set other plot attributes
-        plt.ylabel('count')
+        plt.xlabel('node_ID')                        # set other plot attributes
+        plt.ylabel('# accesses')
         plt.title(title)
-        plt.bar(xs, ys)                                     # plot the bar chart
+        plt.bar(xs, ys, color='b', edgecolor='b')           # plot the bar chart
+        plt.tight_layout()
         if show: plt.show()

@@ -12,7 +12,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-N        = 1000             # number of accesses to the datalayer in below tests
+N        = 10000            # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
 levels   = 2                                                  # number of levels
 fanout   = S ** 3
@@ -33,8 +33,8 @@ class TestShuffleLayer:
 
     def setup_method(self, test_method):
         Node.set_last_id(0)                            # reset node counter to 0
-        self.statslayer = [self._create_datalayer() for _ in xrange(S)]
-        self.datalayer = MultiShuffleLayer(self.statslayer)
+        self.statslayers = [self._create_datalayer() for _ in xrange(S)]
+        self.datalayer = MultiShuffleLayer(self.statslayers)
         self.tree = MultiTree(self.datalayer, fanout=fanout, leafsize=leafsize)
         self.tree.bulk_load(data)                 # bulk load data into the tree
         self.datalayer.set_root_ids(self.tree._roots)            # set the roots
@@ -47,22 +47,33 @@ class TestShuffleLayer:
         with pytest.raises(KeyError):
             self.datalayer.get(len(data))
 
-    def test_with_shuffle_index(self):
-        for statslayer in self.statslayer:
-            statslayer.reset()
+    def test_with_shuffle_index_gaussian(self):
+        for statslayer in self.statslayers: statslayer.reset()
+        for i in xrange(N): self.datalayer.get(gaussrange(numdata))
+        self._plot_results('tests/figure_multishufflelayer_gaussian')
 
-        for i in xrange(N):
-            #self.datalayer.get(0)                          # worst case scenario
-            self.datalayer.get(gaussrange(numdata))         # worst case scenario
+    def test_with_shuffle_index_worst(self):
+        for statslayer in self.statslayers: statslayer.reset()
+        for i in xrange(N): self.datalayer.get(0)
+        self._plot_results('tests/figure_multishufflelayer_worst')
 
-        for row, statslayer in enumerate(self.statslayer):
-            plt.subplot(len(self.statslayer), 2, 1 + 2 * row)
+    def _plot_results(self, pathprefix):
+        plt.figure(figsize=(4,6))
+        for row, statslayer in enumerate(self.statslayers, start=1):
+            plt.subplot(len(self.statslayers), 1, row)
             plt.yscale('log')
-            statslayer.plot_get(show=False)
-            plt.subplot(len(self.statslayer), 2, 2 + 2 * row)
-            plt.yscale('log')
-            statslayer.plot_put(show=False)
+            statslayer.plot_get(show=False, title='read (server %d)' % row)
 
         plt.tight_layout()
-        plt.savefig('tests/figure_multishufflelayer.pdf')
+        plt.savefig(pathprefix + '_get.pdf')
+        plt.clf()
+
+        plt.figure(figsize=(4,6))
+        for row, statslayer in enumerate(self.statslayers, start=1):
+            plt.subplot(len(self.statslayers), 1, row)
+            plt.yscale('log')
+            statslayer.plot_put(show=False, title='write (server %d)' % row)
+
+        plt.tight_layout()
+        plt.savefig(pathprefix + '_put.pdf')
         plt.clf()

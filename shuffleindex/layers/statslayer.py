@@ -30,7 +30,7 @@ class StatsLayer(DataLayer):
         import matplotlib.pyplot as plt       # import here for loose dependency
         data = sorted(dictionary.items())   # extract the data sorted by node ID
         xs, ys = zip(*data) if data else ([], [])      # zip to create xs and ys
-        plt.xlim(0, max(xs) + 1)                     # set plot limits on x axis
+        plt.xlim(0, int((max(xs) + 1) * 1.02))       # set plot limits on x axis
         xs = [x - 0.4 for x in xs]                # put bars centered with ticks
         plt.xlabel('node_ID')                        # set other plot attributes
         plt.ylabel('# accesses')

@@ -12,7 +12,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-N        = 10000             # number of accesses to the datalayer in below tests
+N        = 10000            # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
 levels   = 2                                                  # number of levels
 fanout   = S ** 3
@@ -47,18 +47,34 @@ class TestMultiDirectSearchLayer:
             self.datalayer.get(numdata)
 
     def test_without_shuffle_index(self):
-
         for i in xrange(N):
             self.datalayer.get(gaussrange(numdata))
 
-        for row, statslayer in enumerate(self.statslayers):
-            plt.subplot(len(self.statslayers), 2, 1 + 2 * row)
+    def test_direct_gaussian(self):
+        for i in xrange(N): self.datalayer.get(gaussrange(numdata))
+        self._plot_results('tests/figure_multidirectsearch_gaussian')
+
+    def test_direct_worst(self):
+        for i in xrange(N): self.datalayer.get(numdata//2)
+        self._plot_results('tests/figure_multidirectsearch_worst')
+
+    def _plot_results(self, pathprefix):
+        plt.figure(figsize=(4,6))
+        for row, statslayer in enumerate(self.statslayers, start=1):
+            plt.subplot(len(self.statslayers), 1, row)
             plt.yscale('log')
-            statslayer.plot_get(show=False)
-            plt.subplot(len(self.statslayers), 2, 2 + 2 * row)
-            plt.yscale('log')
-            statslayer.plot_put(show=False)
+            statslayer.plot_get(show=False, title='read (server %d)' % row)
 
         plt.tight_layout()
-        plt.savefig('tests/figure_multidirectsearchlayer.pdf')
+        plt.savefig(pathprefix + '_get.pdf')
+        plt.clf()
+
+        plt.figure(figsize=(4,6))
+        for row, statslayer in enumerate(self.statslayers, start=1):
+            plt.subplot(len(self.statslayers), 1, row)
+            plt.yscale('log')
+            statslayer.plot_put(show=False, title='write (server %d)' % row)
+
+        plt.tight_layout()
+        plt.savefig(pathprefix + '_put.pdf')
         plt.clf()

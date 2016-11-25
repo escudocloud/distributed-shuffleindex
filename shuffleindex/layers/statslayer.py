@@ -20,11 +20,11 @@ class StatsLayer(DataLayer):
         self.getcount.clear()
         self.putcount.clear()
 
-    def plot_get(self, show=True):
-        self._plot_counter(self.getcount, 'GET', show)
+    def plot_get(self, title='GET', show=True):
+        self._plot_counter(self.getcount, title, show)
 
-    def plot_put(self, show=True):
-        self._plot_counter(self.putcount, 'PUT', show)
+    def plot_put(self, title='PUT', show=True):
+        self._plot_counter(self.putcount, title, show)
 
     def _plot_counter(self, dictionary, title, show):
         import matplotlib.pyplot as plt       # import here for loose dependency

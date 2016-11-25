@@ -52,7 +52,8 @@ class TestShuffleLayer:
             statslayer.reset()
 
         for i in xrange(N):
-            self.datalayer.get(0)                          # worst case scenario
+            #self.datalayer.get(0)                          # worst case scenario
+            self.datalayer.get(gaussrange(numdata))         # worst case scenario
 
         for row, statslayer in enumerate(self.statslayer):
             plt.subplot(len(self.statslayer), 2, 1 + 2 * row)

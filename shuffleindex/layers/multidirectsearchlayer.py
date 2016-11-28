@@ -1,7 +1,8 @@
 from datalayer import DataLayer
 from operator import attrgetter
 from bisect import bisect_right
-from ..multishuffleindex import Leaf
+from ..multishuffleindex import Leaf as MultiLeaf
+from ..shuffleindex import Leaf
 
 class MultiDirectSearchLayer(DataLayer):
 
@@ -22,7 +23,7 @@ class MultiDirectSearchLayer(DataLayer):
         idx = bisect_right(lefts, key) - 1
         node = roots[idx]
 
-        while not isinstance(node, Leaf):
+        while not isinstance(node, Leaf) and not isinstance(node, MultiLeaf):
             node = self._get(node.child_to_follow(key))
         return node[key]
 

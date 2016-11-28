@@ -18,7 +18,7 @@ import numpy as np
 
 N        = 100              # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
-levels   = 2                                                  # number of levels
+levels   = 1                                                  # number of levels
 fanout   = S ** 3
 leafsize = S ** 3
 enc_key  = '0123456789ABCDEF'

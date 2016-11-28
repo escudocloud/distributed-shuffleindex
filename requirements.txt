@@ -3,6 +3,7 @@ colorama
 futures
 google-cloud
 matplotlib
+numpy
 oauth2client
 pycryptodome
 pytest

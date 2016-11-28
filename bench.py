@@ -13,11 +13,12 @@ from random import randrange
 from string import printable
 from time import time
 from tqdm import tqdm
+import numpy as np
 
 
 N        = 100              # number of accesses to the datalayer in below tests
 S        = 3                                                 # number of servers
-levels   = 1                                                  # number of levels
+levels   = 2                                                  # number of levels
 fanout   = S ** 3
 leafsize = S ** 3
 enc_key  = '0123456789ABCDEF'
@@ -83,13 +84,14 @@ if __name__ == '__main__':
     shufflelayer.set_root_ids(tree._roots)                       # set the roots
 
     print 'getting contents ...'
-    start = time()
+    times = []
 
     for i in tqdm(xrange(N)):                                  # access the data
+        start = time()
         key = randrange(numdata)
         shufflelayer.get(key)
+        times.append(time() - start)
 
-    elapsed = time() - start
     print ''
-    print 'total access time: %.5f s' % elapsed
-    print 'avg access time: %.5f s' % (elapsed / N)
+    print 'avg access time: %.5f s' % np.mean(times)
+    print 'std access time: %.5f s' % np.std(times)

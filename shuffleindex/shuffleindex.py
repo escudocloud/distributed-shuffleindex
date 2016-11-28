@@ -2,6 +2,7 @@ from operator import itemgetter
 from bisect import bisect_right
 from utils import chunks
 from time import time
+from tqdm import tqdm
 from six import iterkeys
 
 class Node(object):
@@ -93,7 +94,8 @@ class Tree(object):
         data = sorted(data.items(), key=itemgetter(0)) # sort by key
         nodes = [Leaf(dict(chk)) for chk in chunks(data, self._leafsize)]
         while True:
-            ptrs = [self._datalayer.put(node.ID, node) for node in nodes]
+            print 'putting level with %d nodes' % len(nodes)
+            ptrs = [self._datalayer.put(node.ID, node) for node in tqdm(nodes)]
             if len(ptrs) <= 1: break
             vals = [node.leftmost for node in nodes]
             chks = zip(chunks(vals, self._fanout), chunks(ptrs, self._fanout))

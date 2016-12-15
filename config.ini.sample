@@ -1,0 +1,11 @@
+[swift]
+username =
+key =
+tenant_name =
+container_name =
+authurl =
+
+[s3]
+access_key =
+secret_key =
+bucket_name =

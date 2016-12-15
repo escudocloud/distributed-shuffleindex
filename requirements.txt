@@ -1,0 +1,13 @@
+boto
+colorama
+futures
+google-cloud
+matplotlib
+numpy
+oauth2client
+pycryptodome
+pytest
+python-keystoneclient
+python-swiftclient
+six
+tqdm

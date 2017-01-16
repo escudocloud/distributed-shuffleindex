@@ -9,3 +9,11 @@ authurl =
 access_key =
 secret_key =
 bucket_name =
+
+[ecs]
+access_key =
+secret_key =
+bucket_name =
+host =
+port =
+is_secure =

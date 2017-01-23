@@ -1,0 +1,5 @@
+user = "xxxxx"
+password = "xxxxx"
+authurl = "http://xxx.xxx.xxx.xxx:xxxx/v2.0"
+tenant_name = "xxxxx"
+container_name = "xxxxx"

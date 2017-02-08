@@ -1,0 +1,5 @@
+user = "xxxxx"
+password = "xxxxx"
+authurl = "https://xxx.xxx.xxx.xxx:xxxx/auth/v1.0"
+namespace = "xxxxx"
+bucket_name = "xxxxx"

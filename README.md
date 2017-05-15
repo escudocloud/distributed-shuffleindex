@@ -1,6 +1,6 @@
 # shuffleindex
 
-[![Build Status](https://travis-ci.org/enricobacis/shuffleindex.svg?branch=master)](https://travis-ci.org/enricobacis/shuffleindex)
+[![Build Status](https://travis-ci.org/escudocloud/distributed-shuffleindex.svg?branch=master)](https://travis-ci.org/escudocloud/distributed-shuffleindex)
 
 Python implementation of the Shuffle Index and Distributed Shuffle Index structures presented in the articles:
 

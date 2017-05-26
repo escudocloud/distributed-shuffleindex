@@ -1,5 +1,6 @@
 from collections import Counter
 from datalayer import DataLayer
+from time import time
 
 class StatsLayer(DataLayer):
 
@@ -7,18 +8,28 @@ class StatsLayer(DataLayer):
         self._datalayer = datalayer
         self.getcount =  Counter()
         self.putcount =  Counter()
+        self.gettimes = []
+        self.puttimes = []
 
     def get(self, key):
         self.getcount[key] += 1
-        return self._datalayer.get(key)
+        start = time()
+        result = self._datalayer.get(key)
+        self.gettimes.append(time() - start)
+        return result
 
     def put(self, key, value):
         self.putcount[key] += 1
-        return self._datalayer.put(key, value)
+        start = time()
+        result = self._datalayer.put(key, value)
+        self.puttimes.append(time() - start)
+        return result
 
     def reset(self):
         self.getcount.clear()
         self.putcount.clear()
+        self.gettimes = []
+        self.puttimes = []
 
     def plot_get(self, title='GET', show=True):
         self._plot_counter(self.getcount, title, show)
